@@ -4,8 +4,8 @@ Full-text search on a browser using Web SQL Database.
 May support Indexed Database API in the future.
 
 == Dependency
- - jsdeferred.js <http://github.com/cho45/jsdeferred>
- - jsdeferred-webdatabase <http://github.com/hotchpotch/jsdeferred-webdatabase>
+- jsdeferred.js <http://github.com/cho45/jsdeferred>
+- jsdeferred-webdatabase <http://github.com/hotchpotch/jsdeferred-webdatabase>
 
 == Author
 
