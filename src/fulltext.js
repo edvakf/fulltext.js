@@ -19,7 +19,7 @@
 	// supply Deferred.Database instance or else it will create a database
 	var FullText = Deferred.WebDatabase.FullText = function(dbName, option) {
 		if (!option) option = {};
-		option.version = option.version || ''; // empty string means use existing version
+		option.version = option.version || '0.1.0'; // empty string means use existing version
 		option.estimateSize = option.estimateSize || 50*1024*1024; // 50MB
 
 		this.database = new Database(dbName || 'fulltext', option);
@@ -110,7 +110,7 @@
 		});
 	};
 
-	FullText.prototype.reindex = function() {
+	FullText.prototype.reIndex = function() {
 		var SQLdrop = "DROP INDEX IF EXISTS fulltext_token_index;";
 		var SQLcreate = "CREATE INDEX fulltext_token_index ON "+ tokenTable +" (token);";
 		return this.database.transaction(function(tx) {
