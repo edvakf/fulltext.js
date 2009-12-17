@@ -1,7 +1,7 @@
 // fulltext.js
 // Version : 0.2.0
 // License : The MIT License
-//   Copyright (c) 2009 Atsushi Takayama
+//   Copyright (c) 2009 Atsushi Takayama (taka.atsushi (a) gmail.com)
 // Depends on :
 //   jsdeferred.js <http://github.com/cho45/jsdeferred>
 //   jsdeferred-webdatabase <http://github.com/hotchpotch/jsdeferred-webdatabase>
