@@ -156,39 +156,37 @@ Deferred.test('tokenize', function(done) {
 }, 11)
 
 .test('compose search SQL', function(done) {
-	equals(FullText.composeSearchSQL(''), "SELECT txt.tid FROM fulltext_text txt" );
-
-		// next one looks very wrong, but for the moment it is the expected behavior
-	equals(FullText.composeSearchSQL('% _ \''), "SELECT DISTINCT txt.tid FROM fulltext_text txt WHERE txt.text LIKE '%%%' AND txt.text LIKE '%_%' AND txt.text LIKE '%''%'" ); 
-	equals(FullText.composeSearchSQL('100%'), "SELECT DISTINCT txt.tid FROM fulltext_text txt INNER JOIN fulltext_token tkn0 USING (tid) WHERE tkn0.token = '100' AND txt.text LIKE '%100%%'" ); 
-	equals(FullText.composeSearchSQL('abc'), "SELECT DISTINCT txt.tid FROM fulltext_text txt INNER JOIN fulltext_token tkn0 USING (tid) WHERE tkn0.token = 'abc'" ); 
-	equals(FullText.composeSearchSQL('abc def'), "SELECT DISTINCT txt.tid FROM fulltext_text txt INNER JOIN fulltext_token tkn0 USING (tid) INNER JOIN fulltext_token tkn1 USING (tid) WHERE tkn0.token = 'abc' AND tkn1.token = 'def'" ); 
-	equals(FullText.composeSearchSQL('"abc def"'), "SELECT DISTINCT txt.tid FROM fulltext_text txt INNER JOIN fulltext_token tkn0 USING (tid) INNER JOIN fulltext_token tkn1 USING (tid) WHERE tkn0.token = 'abc' AND tkn1.token = 'def' AND txt.text LIKE '%abc def%'" ); 
+	equals(FullText.composeSearchSQL(''), "SELECT txt.* FROM fulltext_text txt" );
+	equals(FullText.composeSearchSQL('& % _ \''), "SELECT DISTINCT txt.* FROM fulltext_text txt WHERE txt.text LIKE '%&#36;%' AND txt.text LIKE '%&#37;%' AND txt.text LIKE '%&#95;%' AND txt.text LIKE '%''%'" ); 
+	equals(FullText.composeSearchSQL('100%'), "SELECT DISTINCT txt.* FROM fulltext_text txt INNER JOIN fulltext_token tkn0 USING (tid) WHERE tkn0.token = '100' AND txt.text LIKE '%100&#37;%'" ); 
+	equals(FullText.composeSearchSQL('abc'), "SELECT DISTINCT txt.* FROM fulltext_text txt INNER JOIN fulltext_token tkn0 USING (tid) WHERE tkn0.token = 'abc'" ); 
+	equals(FullText.composeSearchSQL('abc def'), "SELECT DISTINCT txt.* FROM fulltext_text txt INNER JOIN fulltext_token tkn0 USING (tid) INNER JOIN fulltext_token tkn1 USING (tid) WHERE tkn0.token = 'abc' AND tkn1.token = 'def'" ); 
+	equals(FullText.composeSearchSQL('"abc def"'), "SELECT DISTINCT txt.* FROM fulltext_text txt INNER JOIN fulltext_token tkn0 USING (tid) INNER JOIN fulltext_token tkn1 USING (tid) WHERE tkn0.token = 'abc' AND tkn1.token = 'def' AND txt.text LIKE '%abc def%'" ); 
 
 		// trivial (non-bigram) queries are sorted by the token length
-	equals(FullText.composeSearchSQL('"ab cde"fghi'), "SELECT DISTINCT txt.tid FROM fulltext_text txt INNER JOIN fulltext_token tkn2 USING (tid) INNER JOIN fulltext_token tkn1 USING (tid) INNER JOIN fulltext_token tkn0 USING (tid) WHERE tkn2.token = 'fghi' AND tkn1.token = 'cde' AND tkn0.token = 'ab' AND txt.text LIKE '%ab cde%'" ); 
-	equals(FullText.composeSearchSQL('"abc def"ghi いろは'), "SELECT DISTINCT txt.tid FROM fulltext_text txt INNER JOIN fulltext_token tkn0 USING (tid) INNER JOIN fulltext_token tkn1 USING (tid) INNER JOIN fulltext_token tkn2 USING (tid) INNER JOIN fulltext_token tkn3 USING (tid) INNER JOIN fulltext_token tkn4 USING (tid) WHERE tkn0.token = 'abc' AND tkn1.token = 'def' AND tkn2.token = 'ghi' AND tkn3.token = 'いろ' AND tkn4.token = 'ろは' AND txt.text LIKE '%abc def%' AND txt.text LIKE '%いろは%'" ); 
+	equals(FullText.composeSearchSQL('"ab cde"fghi'), "SELECT DISTINCT txt.* FROM fulltext_text txt INNER JOIN fulltext_token tkn2 USING (tid) INNER JOIN fulltext_token tkn1 USING (tid) INNER JOIN fulltext_token tkn0 USING (tid) WHERE tkn2.token = 'fghi' AND tkn1.token = 'cde' AND tkn0.token = 'ab' AND txt.text LIKE '%ab cde%'" ); 
+	equals(FullText.composeSearchSQL('"abc def"ghi いろは'), "SELECT DISTINCT txt.* FROM fulltext_text txt INNER JOIN fulltext_token tkn0 USING (tid) INNER JOIN fulltext_token tkn1 USING (tid) INNER JOIN fulltext_token tkn2 USING (tid) INNER JOIN fulltext_token tkn3 USING (tid) INNER JOIN fulltext_token tkn4 USING (tid) WHERE tkn0.token = 'abc' AND tkn1.token = 'def' AND tkn2.token = 'ghi' AND tkn3.token = 'いろ' AND tkn4.token = 'ろは' AND txt.text LIKE '%abc def%' AND txt.text LIKE '%いろは%'" ); 
 	done.call();
 }, 8)
 
 .test('drop and create table', function(done) {
-	return ft.dropAndCreate()
+	return ft.dropAndCreateTable()
 		.next(function() { ok(true, 'new tables are created.') })
 		.error(function(e) { console.log(e); ok(false, 'new tables were not created.') })
 		.next(function() { done.call(); });
 }, 1)
 
-.test('add records', function(done) {
+.test('create records', function(done) {
 	var n = 0;
 	return loop(texts.length, function(i) {
-		return ft.addRecord(texts[i])
+		return ft.createRecord(texts[i])
 			.next(function(r) { textids.push(r); equals(r, ++n); })
 			.error(function(e) { ok(false, 'failed to save : ' + texts[i]) });
 	})
 	.next(function() { done.call(); });
 }, texts.length)
 
-.test('reindex token table', function(done) {
+.test('re-index token table', function(done) {
 	return ft.reIndex()
 		.next(function() {ok(true, 'index for token table was made');})
 		.next(function() {done.call();})
@@ -206,7 +204,7 @@ Deferred.test('tokenize', function(done) {
 	._(ft).search('Don\'')
 	.next(function(res) { equals(res.length, 1); })
 	._(ft).search('100%')
-	.next(function(res) { equals(res.length, 2); })  // this is the current behavior, but needs fixed
+	.next(function(res) { equals(res.length, 1); })
 	._(ft).search('アイウエオ')
 	.next(function(res) { equals(res.length, 1); })
 	._(ft).search('いろは')
