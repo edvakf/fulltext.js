@@ -35,22 +35,27 @@
 		}, this.database);
 
 		this.Text.proxyColumns({
-			date : {
-				getter: function(val) {
-					if (typeof val == 'undefined') {
-						return;
-					} else {
-						return new Date(val);
+				Date: {
+					getter: function(val) {
+						if (typeof val == 'undefined') {
+							return;
+						} else {
+							return new Date(val);
+						}
+					},
+					setter: function(val) {
+						if (val instanceof Date) {
+							return val.getTime();
+						} else {
+							val = new Date(val);
+							if (val == 'NaN') {
+								return 0
+							} else {
+								return val.getTime();
+							}
+						}
 					}
 				},
-				setter: function(val) {
-					if (val instanceof Date) {
-						return val.getTime();
-					} else {
-						return new Date(val).getTime();  // bug in jsdeferred-webdatabase.js, resultSetInstance fails without this.
-					}
-				}
-			},
 			text : {
 				getter: function(val) {
 					if (typeof val == 'undefined') {

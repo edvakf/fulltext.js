@@ -860,7 +860,16 @@
                 }
             },
             setter: function(val) {
-                return val.getTime();
+                if (val instanceof Date) {
+                  return val.getTime();
+                } else {
+                  val = new Date(val);
+                  if (val == 'NaN') {
+                    return 0
+                  } else {
+                    return val.getTime();
+                  }
+                }
             }
         },
         JSON: {
