@@ -658,7 +658,7 @@
                 var result = [], rows = res.rows;
                 var len = rows.length;
                 for (var i = 0;  i < len; i++) {
-                    var r = new klass(rows.item(i));
+                    var r = new klass(rows.item(i), true);
                     r._created = true;
                     result.push(r);
                 }
@@ -860,16 +860,7 @@
                 }
             },
             setter: function(val) {
-                if (val instanceof Date) {
-                  return val.getTime();
-                } else {
-                  val = new Date(val);
-                  if (val == 'NaN') {
-                    return 0
-                  } else {
-                    return val.getTime();
-                  }
-                }
+                return val.getTime();
             }
         },
         JSON: {

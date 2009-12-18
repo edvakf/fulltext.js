@@ -213,7 +213,7 @@ Deferred.test('tokenize', function(done) {
 	.next(function(res) { equals(res.length, 1); })  // maybe 2 in the future?
 	._(ft).search('本日休業')
 	.next(function(res) { equals(res.length, 1); })  // maybe 2 in the future?
-	._(ft).search('漢字とalpha')
+	._(ft).search('betが')
 	.next(function(res) { equals(res.length, 0); })
 	._(ft).search('漢字とalphabet')
 	.next(function(res) { equals(res.length, 1); })

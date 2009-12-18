@@ -17,12 +17,12 @@
 	var tokenTable = 'fulltext_token';
 
 	// supply Deferred.Database instance or else it will create a database
-	var FullText = Deferred.WebDatabase.FullText = function(dbName, option) {
-		if (!option) option = {};
-		option.version = option.version || '1.0';
-		option.estimateSize = option.estimateSize || 50*1024*1024; // 50MB
+	var FullText = Deferred.WebDatabase.FullText = function(dbName, options) {
+		if (!options) options = {};
+		options.version = options.version || '1.0';
+		options.estimateSize = options.estimateSize || 50*1024*1024; // 50MB
 
-		this.database = new Database(dbName || 'fulltext', option);
+		this.database = new Database(dbName || 'fulltext', options);
 
 		this.Text = Model({
 			table : textTable,
@@ -35,27 +35,7 @@
 		}, this.database);
 
 		this.Text.proxyColumns({
-				Date: {
-					getter: function(val) {
-						if (typeof val == 'undefined') {
-							return;
-						} else {
-							return new Date(val);
-						}
-					},
-					setter: function(val) {
-						if (val instanceof Date) {
-							return val.getTime();
-						} else {
-							val = new Date(val);
-							if (val == 'NaN') {
-								return 0
-							} else {
-								return val.getTime();
-							}
-						}
-					}
-				},
+			date: 'Date',
 			text : {
 				getter: function(val) {
 					if (typeof val == 'undefined') {
@@ -167,7 +147,7 @@
 
 		num_per_page = Math.max(Math.floor(num_per_page), 0) || 100;
 		page = Math.max(Math.floor(page), 0) || 0;
-		sql += " ORDER BY txt.date LIMIT " + num_per_page + " OFFSET " + (page * num_per_page) + ";";
+		sql += " ORDER BY txt.date DESC LIMIT " + num_per_page + " OFFSET " + (page * num_per_page) + ";";
 
 		return this.database.execute(sql).next(function(res) {
 			return Text.resultSetInstance(res);
@@ -270,7 +250,7 @@
 		return sqlLikeEscape((text+'').replace(/\0/g,'').replace(/'/g, "''"));
 	}
 	sqlLikeEscape = function(text) {
-		return (text+'').replace(/&/g,'&#36;').replace(/%/g,'&#37;').replace(/_/g,'&#95;') // compatible with HTML character reference
+		return (text+'').replace(/&/g,'&#36;').replace(/%/g,'&#37;').replace(/_/g,'&#95;') // compatible with HTML numeric character reference
 	}
 	sqlLikeUnescape = function(text) {
 		return (text+'').replace(/&#95;/g,'_').replace(/&#37;/g,'%').replace(/&#36;/g,'&')
