@@ -82,7 +82,7 @@
 		return db.transaction(function() {
 			Text.createTable();
 			Token.createTable();
-		}
+		});
 	}
 
 	// unsafe (deletes previously saved records)
