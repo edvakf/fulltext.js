@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <title>fulltext.js demo</title>
+    <script type="text/javascript" src="lib/jsdeferred.js"></script>
+    <script type="text/javascript" charset="utf-8" src="lib/jsdeferred-webdatabase.js"></script>
+    <script type="text/javascript" src="../src/fulltext.js"></script>
+    <script type="text/javascript" charset="utf-8" src="search.js"></script>
+  </head>
+  <body>
+    <h1>fulltext.js demo</h1>
+    <p>Before you come to this page, <a href="test2.html">create index here.</a></p>
+    <p>Type any text below. You can use double quotes ("") to group search query.</p>
+    <input id="searchbox" type="text" style="width:100%; font-size:large;"/>
+    <div id="results"></div>
+    <div id="results-template" style="display:none;">
+      <dl>
+        <dt class="title"><a href="URL">TITLE</a></dt>
+        <dd class="text">TEXT</dd>
+      </dl>
+    </div>
+  </body>
+</html>
