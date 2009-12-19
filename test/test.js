@@ -157,7 +157,7 @@ Deferred.test('tokenize', function(done) {
 
 .test('compose search SQL', function(done) {
 	equals(FullText.composeSearchSQL(''), "SELECT txt.* FROM fulltext_text txt" );
-	equals(FullText.composeSearchSQL('& % _ \''), "SELECT DISTINCT txt.* FROM fulltext_text txt WHERE txt.text LIKE '%&#36;%' AND txt.text LIKE '%&#37;%' AND txt.text LIKE '%&#95;%' AND txt.text LIKE '%''%'" ); 
+	equals(FullText.composeSearchSQL('& % _ \''), "SELECT DISTINCT txt.* FROM fulltext_text txt WHERE txt.text LIKE '%&#38;%' AND txt.text LIKE '%&#37;%' AND txt.text LIKE '%&#95;%' AND txt.text LIKE '%''%'" ); 
 	equals(FullText.composeSearchSQL('100%'), "SELECT DISTINCT txt.* FROM fulltext_text txt INNER JOIN fulltext_token tkn0 USING (tid) WHERE tkn0.token = '100' AND txt.text LIKE '%100&#37;%'" ); 
 	equals(FullText.composeSearchSQL('abc'), "SELECT DISTINCT txt.* FROM fulltext_text txt INNER JOIN fulltext_token tkn0 USING (tid) WHERE tkn0.token = 'abc'" ); 
 	equals(FullText.composeSearchSQL('abc def'), "SELECT DISTINCT txt.* FROM fulltext_text txt INNER JOIN fulltext_token tkn0 USING (tid) INNER JOIN fulltext_token tkn1 USING (tid) WHERE tkn0.token = 'abc' AND tkn1.token = 'def'" ); 

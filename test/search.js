@@ -57,16 +57,16 @@ function showResults(query, articles) {
     var titlebox = $('results-template').querySelector('.title').cloneNode(true);
     var textbox = $('results-template').querySelector('.text').cloneNode(true);
     titlebox.firstChild.textContent = a.title;
-    titlebox.firstChild.href = 'http://ja.wikipedia.org/'+a.title;
+    titlebox.firstChild.href = 'http://ja.wikipedia.org/wiki/'+a.title;
     textbox.textContent = a.text;
     results.appendChild(titlebox);
     results.appendChild(textbox);
   });
   var len = articles.length;
   if (len == 10) {
-    var info = 'Results <b>'+ (_page*10) + ' - ' + (_page+1)*10 + '</b> for <b>' + query.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '<b>. (<b>' + _time + ' ms</b>) <a href="javascript:search(_query, _page+1)">Show Next</a>';
+    var info = 'Results <b>'+ (_page*10) + ' - ' + (_page+1)*10 + '</b> for <b>' + query.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</b>. (<b>' + _time + ' ms</b>) <a href="javascript:search(_query, _page+1)">Show Next</a>';
   } else if (len) {
-    var info = 'Results <b>'+ (_page*10) + ' - ' + (_page*10+len) + '</b> for <b>' + query.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '<b>. (<b>' + _time + ' ms</b>)';
+    var info = 'Results <b>'+ (_page*10) + ' - ' + (_page*10+len) + '</b> for <b>' + query.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</b>. (<b>' + _time + ' ms</b>)';
   } else {
     var info = 'No results for ' + query.replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }

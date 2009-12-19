@@ -250,9 +250,9 @@
 		return sqlLikeEscape((text+'').replace(/\0/g,'').replace(/'/g, "''"));
 	}
 	sqlLikeEscape = function(text) {
-		return (text+'').replace(/&/g,'&#36;').replace(/%/g,'&#37;').replace(/_/g,'&#95;') // compatible with HTML numeric character reference
+		return (text+'').replace(/&/g,'&#38;').replace(/%/g,'&#37;').replace(/_/g,'&#95;') // compatible with HTML numeric character reference
 	}
 	sqlLikeUnescape = function(text) {
-		return (text+'').replace(/&#95;/g,'_').replace(/&#37;/g,'%').replace(/&#36;/g,'&')
+		return (text+'').replace(/&#95;/g,'_').replace(/&#37;/g,'%').replace(/&#38;/g,'&')
 	}
 })();
